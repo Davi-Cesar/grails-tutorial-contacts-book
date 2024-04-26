@@ -26,8 +26,10 @@ class MemberController {
         def response = memberService.save(params)
         if (!response.isSuccess) {
             flash.redirectParams = response.model
+            flash.message = AppUtil.infoMessage(g.message(code: "unable.to.save") as String, false)
             redirect(controller: "member", action: "create")
         }else{
+            flash.message = AppUtil.infoMessage(g.message(code: "saved") as String)
             redirect(controller: "member", action: "index")
         }
     }
@@ -39,6 +41,7 @@ class MemberController {
         } else {
             def response = memberService.getById(id)
             if (!response) {
+                flash.message = AppUtil.infoMessage(g.message(code: "invalid.entity") as String, false)
                 redirect(controller: "member", action: "index")
             } else {
                 [member: response]
@@ -50,13 +53,16 @@ class MemberController {
     def update() {
         def response = memberService.getById(params.id)
         if (!response){
+            flash.message = AppUtil.infoMessage(g.message(code: "invalid.entity") as String, false)
             redirect(controller: "member", action: "index")
         }else{
             response = memberService.update(response, params)
             if (!response.isSuccess){
                 flash.redirectParams = response.model
+                flash.message = AppUtil.infoMessage(g.message(code: "unable.to.update") as String, false)
                 redirect(controller: "member", action: "edit")
             }else{
+                flash.message = AppUtil.infoMessage(g.message(code: "updated") as String)
                 redirect(controller: "member", action: "index")
             }
         }
@@ -65,9 +71,15 @@ class MemberController {
     def delete(Integer id) {
         def response = memberService.getById(id)
         if (!response){
+            flash.message = AppUtil.infoMessage(g.message(code: "invalid.entity") as String, false)
             redirect(controller: "member", action: "index")
         }else{
             response = memberService.delete(response)
+            if (!response){
+                flash.message = AppUtil.infoMessage(g.message(code: "unable.to.delete") as String, false)
+            }else{
+                flash.message = AppUtil.infoMessage(g.message(code: "deleted") as String)
+            }
             redirect(controller: "member", action: "index")
         }
     }
