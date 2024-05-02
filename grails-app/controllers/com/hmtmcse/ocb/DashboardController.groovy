@@ -1,6 +1,6 @@
 package com.hmtmcse.ocb
 
-class DasoboardController {
+class DashboardController {
 
     def index() { }
 }
